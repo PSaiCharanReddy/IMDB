@@ -12,6 +12,7 @@ import com.movie.imdb.repositories.ActorRepository;
 @Service
 @RequiredArgsConstructor
 public class ActorServiceImpl  implements ActorService {
+<<<<<<< Updated upstream
     private final ActorRepository actorRepository;
     @Override
     public Actor addActor(Actor actor) {
@@ -40,4 +41,7 @@ public class ActorServiceImpl  implements ActorService {
 
 
     
+=======
+
+>>>>>>> Stashed changes
 }
