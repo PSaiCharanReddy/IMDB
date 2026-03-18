@@ -1,13 +1,17 @@
 package com.movie.imdb.controller;
 import com.movie.imdb.model.Actor;
 import com.movie.imdb.services.ActorService;
-import lombok.RequiredArgsConstructor;  
-@RESTController
+import lombok.RequiredArgsConstructor; 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+@RestController
 @RequestMapping("/api/actors")
 @RequiredArgsConstructor
 public class ActorController {
     private final ActorService actorService;
-    @POSTMapping("/add")
+    @PostMapping("/add")
     public ResponseEntity<Actor> addActor(@RequestBody Actor actor) {
         Actor createdActor = actorService.addActor(actor);
         return new ResponseEntity<>(createdActor, HttpStatus.CREATED);
