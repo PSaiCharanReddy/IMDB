@@ -12,8 +12,11 @@ public class Movie {
     private Long id;
 
     private String title;
+<<<<<<< Updated upstream
 
     
+=======
+>>>>>>> Stashed changes
     @JoinColumn(name = "director_id")
     @ManyToOne
     private Director director;
