@@ -13,7 +13,7 @@ public class Movie {
 
     private String title;
 
-    private String genre;
+    
     @JoinColumn(name = "director_id")
     @ManyToOne
     private Director director;
@@ -21,6 +21,8 @@ public class Movie {
     @JoinColumn(name = "writer_id")
     @ManyToOne
     private Writer writer;
+    @OneToMany(mappedBy = "movie")
+    private List<Cast> casts;
 
     @Enumerated(EnumType.STRING)
     private Genre genreType;
