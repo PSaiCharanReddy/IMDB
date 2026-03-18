@@ -1,50 +1,56 @@
 package com.movie.imdb.controller;
+
 import com.movie.imdb.model.Director;
 import com.movie.imdb.services.DirectorService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-@RestController
-@RequestMapping("/directors")
-@RequiredArgsConstructor
 
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/directors")
+@RequiredArgsConstructor
 public class DirectorController {
+
     private final DirectorService directorService;
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<Director> createDirector(@RequestBody Director director) {
-        Director createdDirector = directorService.createDirector(director);
-        return new ResponseEntity<>(createdDirector, HttpStatus.CREATED);
+        return new ResponseEntity<>(directorService.createDirector(director), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Director> getDirectorById(@PathVariable Long id) {
-        Director director = directorService.getDirectorById(id);
-        if (director != null) {
-            return new ResponseEntity<>(director, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            return ResponseEntity.ok(directorService.getDirectorById(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
-    @PutMapping("/{id}")
+    @GetMapping("/all")
+    public ResponseEntity<List<Director>> getAllDirectors() {
+        return ResponseEntity.ok(directorService.getAllDirectors());
+    }
+
+    @PutMapping("/update/{id}")
     public ResponseEntity<Director> updateDirector(@PathVariable Long id, @RequestBody Director director) {
-        Director updatedDirector = directorService.updateDirector(id, director);
-        if (updatedDirector != null) {
-            return new ResponseEntity<>(updatedDirector, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            return ResponseEntity.ok(directorService.updateDirector(id, director));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteDirector(@PathVariable Long id) {
         boolean deleted = directorService.deleteDirector(id);
-        if (deleted) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return deleted
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
     }
 }

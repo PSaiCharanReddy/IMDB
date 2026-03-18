@@ -3,13 +3,16 @@ package com.movie.imdb.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "writers")
+@Entity
+@Table(name = "writers")
 @Data
-class Writer {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Writer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
 
- 
+    private String name;
 }

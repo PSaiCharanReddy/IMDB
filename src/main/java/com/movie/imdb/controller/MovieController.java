@@ -1,55 +1,85 @@
 package com.movie.imdb.controller;
-import com.movie.imdb.model.Movie;
+
+import com.movie.imdb.dto.MovieDto;
 import com.movie.imdb.services.MovieService;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import com.movie.imdb.dto.MovieDto;
+
 @RestController
-@RequestMapping("/Movies")
+@RequestMapping("/api/movies")
+@RequiredArgsConstructor
 public class MovieController {
-    @Autowired
-    private MovieService movieService;
+
+    private final MovieService movieService;
 
     @PostMapping("/add")
-    public ResponseEntity<String> addMovie(@RequestBody MovieDto movie) {
-        movieService.addMovie(movie);
-        return ResponseEntity.ok("Movie added successfully");
+    public ResponseEntity<String> addMovie(@RequestBody MovieDto movieDto) {
+        movieService.addMovie(movieDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Movie added successfully");
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<MovieDto> getMovieById(@PathVariable Long id) {
-        Movie movie = movieService.getMovieById(id);
-        if (movie != null) {
-            return ResponseEntity.ok(movie);
-        } else {
+        try {
+            return ResponseEntity.ok(movieService.getMovieById(id));
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping("/all")
     public ResponseEntity<List<MovieDto>> getAllMovies() {
-        List<MovieDto> movies = movieService.getAllMovies();
-        return ResponseEntity.ok(movies);   
+        return ResponseEntity.ok(movieService.getAllMovies());
     }
+
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateMovie(@PathVariable Long id, @RequestBody MovieDto movie) {
-        boolean updated = movieService.updateMovie(id, movie);
-        if (updated) {
-            return ResponseEntity.ok("Movie updated successfully");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<String> updateMovie(@PathVariable Long id, @RequestBody MovieDto movieDto) {
+        boolean updated = movieService.updateMovie(id, movieDto);
+        return updated
+                ? ResponseEntity.ok("Movie updated successfully")
+                : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteMovie(@PathVariable Long id) {
         boolean deleted = movieService.deleteMovie(id);
-        if (deleted) {
-            return ResponseEntity.ok("Movie deleted successfully");
-        } else {
-            return ResponseEntity.notFound().build();
+        return deleted
+                ? ResponseEntity.ok("Movie deleted successfully")
+                : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/search/title")
+    public ResponseEntity<List<MovieDto>> searchByTitle(@RequestParam String title) {
+        return ResponseEntity.ok(movieService.searchByTitle(title));
+    }
+
+    @GetMapping("/search/director")
+    public ResponseEntity<List<MovieDto>> searchByDirector(@RequestParam String name) {
+        return ResponseEntity.ok(movieService.searchByDirector(name));
+    }
+
+    @GetMapping("/search/actor")
+    public ResponseEntity<List<MovieDto>> searchByActor(@RequestParam String name) {
+        return ResponseEntity.ok(movieService.searchByActor(name));
+    }
+
+    @GetMapping("/search/genre")
+    public ResponseEntity<List<MovieDto>> searchByGenre(@RequestParam String genre) {
+        try {
+            return ResponseEntity.ok(movieService.searchByGenre(genre));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
+    @GetMapping("/search/year")
+    public ResponseEntity<List<MovieDto>> searchByYear(@RequestParam int year) {
+        return ResponseEntity.ok(movieService.searchByYear(year));
+    }
 }

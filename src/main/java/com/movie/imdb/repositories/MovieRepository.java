@@ -1,17 +1,24 @@
 package com.movie.imdb.repositories;
 import com.movie.imdb.model.Movie;
+import com.movie.imdb.model.Genre;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-  public List<Movie> findByTitleContaining(String title);
 
-    public List<Movie>  findByReleaseYear(int releaseYear);
-    public  List<Movie> findByRating(double rating);
-    public  List<Movie> findByGenreTypeContaining(String genreType);
-    public  List<Movie> findByDirectorNameContaining(String directorName);
-    public  List<Movie> findByWriterNameContaining(String writerName);
+    List<Movie> findByTitleContainingIgnoreCase(String title);
 
-   public List<Movie> findDistinctByCasts_Actor_NameContaining(String actorName);
+    List<Movie> findByReleaseYear(int releaseYear);
+
+    List<Movie> findByRating(double rating);
+
+    List<Movie> findByGenreType(Genre genreType);
+
+    List<Movie> findByDirector_NameContainingIgnoreCase(String directorName);
+
+    List<Movie> findByWriter_NameContainingIgnoreCase(String writerName);
+
+    List<Movie> findDistinctByCasts_Actor_NameContainingIgnoreCase(String actorName);
 }
