@@ -1,9 +1,7 @@
 package com.movie.imdb.model;
-import org.springframework.core.annotation.MergedAnnotation;
 
 import jakarta.persistence.*;
 import lombok.*;    
-import com.movie.imdb.model.*;
 
 
 

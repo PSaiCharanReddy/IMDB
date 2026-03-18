@@ -1,5 +1,7 @@
 package com.movie.imdb.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,11 +14,6 @@ public class Movie {
     private Long id;
 
     private String title;
-<<<<<<< Updated upstream
-
-    
-=======
->>>>>>> Stashed changes
     @JoinColumn(name = "director_id")
     @ManyToOne
     private Director director;
